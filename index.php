@@ -5,6 +5,18 @@
 
     use BADDI\VINDecoder;
 
-    $decoder = new VINDecoder("WDYPE8CCXD5801598");
-
-    echo $decoder->vin;
+    if(isset($_POST['vin']))
+        $decoder = new VINDecoder($_POST['vin']);
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VIN Decoder</title>
+    </head>
+    <body>
+        <form method="POST">
+            <input type="text" name="vin"/>
+            <input type="submit" value="Decode"/>
+        </form>
+    </body>
+</html>

@@ -2,15 +2,20 @@
 
     namespace BADDI;
 
-use Exception;
+    use Exception;
 
-class VINDecoder
+    class VINDecoder
     {
         public $vin;
+
+        private $wmi;
+        private $vds;
+        private $vis;
 
         private $transliteration = [];
 
         private $weightedProduct = [];
+        
         private $calculatedWeightedProduct = 0;
 
         /**
@@ -22,14 +27,19 @@ class VINDecoder
         {
             // Validate the VIN length
             if(!$this->isValid($vin))
-                throw new Exception("VIN number must be 17 characters");
+                throw new Exception("Invalid VIN characters");
 
             // Store the vin into this instance
             $this->vin = strtoupper($vin);
 
             // Validate the VIN
             if(!$this->checksum())
-                throw new Exception("Invalid VIN characters");
+                throw new Exception("Invalid VIN");
+
+            // Parse the VIN details identifiers
+            $this->wmi = substr($this->vin, 0, 3);
+            $this->vds = substr($this->vin, 3, 6);
+            $this->vis = substr($this->vin, 9, 8);
         }
 
         /**
@@ -43,8 +53,10 @@ class VINDecoder
             // Verify if the vin corresponds to a vehicle manufactured before 1981
             if(strlen($vin) == 11)
                 throw new Exception("Information on vehicles manufactured before 1981 is limited");
+            elseif(strlen($vin) != VINConstants::VIN_LENGTH)
+                throw new Exception("VIN number must be 17 characters");
 
-            return strlen($vin) == VINConstants::VIN_LENGTH;
+            return (bool)preg_match('/^[a-zA-Z0-9]+$/', $vin);
         }
 
         /**
