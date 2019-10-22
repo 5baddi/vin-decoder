@@ -25,30 +25,44 @@
          */
         public function __construct(string $vin)
         {
-            // Validate the VIN length
-            if(!$this->isValid($vin))
-                throw new Exception("Invalid VIN characters");
+            try{
+                // Validate the VIN length
+                if(!$this->validate($vin))
+                    throw new Exception("Invalid VIN characters");
 
-            // Store the vin into this instance
-            $this->vin = strtoupper($vin);
+                // Store the vin into this instance
+                $this->vin = strtoupper($vin);
 
-            // Validate the VIN
-            if(!$this->checksum())
-                throw new Exception("Invalid VIN");
+                // Validate the VIN
+                if(!$this->checksum())
+                    throw new Exception("Invalid VIN");
 
-            // Parse the VIN details identifiers
-            $this->wmi = substr($this->vin, 0, 3);
-            $this->vds = substr($this->vin, 3, 6);
-            $this->vis = substr($this->vin, 9, 8);
+                // Parse the VIN details identifiers
+                $this->wmi = substr($this->vin, 0, 3);
+                $this->vds = substr($this->vin, 3, 6);
+                $this->vis = substr($this->vin, 9, 8);
+            }catch(Exception $ex){
+                // TODO: Handle exceptions
+                die($ex->getMessage());
+            }
         }
 
         /**
-         * Check the vin length
+         * Check if the VIN is valid
+         * @return boolean
+         */
+        public function isValid() : bool
+        {
+            return $this->validate($this->vin);
+        }
+
+        /**
+         * Check the vin length and regex
          *
          * @param string $vin
          * @return boolean
          */
-        private function isValid(string $vin) : bool
+        private function validate(string $vin) : bool
         {
             // Verify if the vin corresponds to a vehicle manufactured before 1981
             if(strlen($vin) == 11)
