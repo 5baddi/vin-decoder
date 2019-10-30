@@ -57,6 +57,23 @@
         }
 
         /**
+         * Extract the manufacturer brand name
+         *
+         * @return string|null
+         */
+        public function getManufacturer() : ?string
+        {
+            // Load manufacturers list
+            $manufactures = json_decode(file_get_contents(__DIR__ . '../data/manufacturers.json'));
+
+            // Get the manufacturers brand name
+            if(isset($manufactures[$this->wmi]))
+                return ucwords($manufactures[$this->wmi]);
+
+            return null;
+        }
+
+        /**
          * Check the vin length and regex
          *
          * @param string $vin
