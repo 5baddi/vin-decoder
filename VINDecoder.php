@@ -64,7 +64,7 @@
         public function getManufacturer() : ?string
         {
             // Load manufacturers list
-            $manufactures = json_decode(file_get_contents(__DIR__ . '../data/manufacturers.json'));
+            $manufactures = json_decode(file_get_contents('data/manufacturers.json'), true);
 
             // Get the manufacturers brand name
             if(isset($manufactures[$this->wmi]))
