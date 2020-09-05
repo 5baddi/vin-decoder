@@ -121,15 +121,32 @@ class VINDecoder
     {
         // Load years list
         $years = json_decode(file_get_contents(__DIR__ . "/data/years.json"), true);
-        
-        // Year code
-        $yearCode = substr($this->vin, 9, 1);
 
         // Get year by code
-        if(isset($years[$yearCode]))
-            return 1980 + ($years[$yearCode] % 30);
+        if(isset($years[$this->vis[0]]))
+            return $years[$this->vis[0]];
 
         return null;
+    }
+
+    /**
+     * Extract serial numver
+     * 
+     * @return string
+     */
+    public function getSerialNumber() : string
+    {
+        return substr($this->vin, 11, 6);
+    }
+
+    /**
+     * Extract security code
+     * 
+     * @return char
+     */
+    public function getSecurityCode() : string
+    {
+        return substr($this->vin, 8, 1);
     }
 
     /**
