@@ -1,7 +1,6 @@
 <?php
 
-    require('VINConstants.php');
-    require('VINDecoder.php');
+    require "vendor/autoload.php";
 
     use BADDIGroup\VINDecoder;
 
@@ -20,7 +19,8 @@
         </form>
         <hr/>
         <?php if(isset($decoder)): ?>
-        <pre><?= $decoder->getManufacturer(); ?></pre>
+        <pre>Manufacturer: <?= $decoder->getManufacturer(); ?></pre>
+        <pre>Check digit: <?= $decoder->getCheckDigit(); ?></pre>
         <?php endif; ?>
     </body>
 </html>

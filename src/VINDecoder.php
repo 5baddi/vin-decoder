@@ -18,9 +18,12 @@ class VINDecoder
 {
     public $vin;
 
+    private $checkDigit;
+
     private $wmi;
     private $vds;
     private $vis;
+
 
     private $transliteration = [];
 
@@ -67,6 +70,16 @@ class VINDecoder
     }
 
     /**
+     * Check digit getter
+     * 
+     * @return int
+     */
+    public function getCheckDigit() : int
+    {
+        return $this->checkDigit;
+    }
+
+    /**
      * Extract the manufacturer brand name
      *
      * @return string|null
@@ -74,7 +87,7 @@ class VINDecoder
     public function getManufacturer() : ?string
     {
         // Load manufacturers list
-        $manufactures = json_decode(file_get_contents('data/manufacturers.json'), true);
+        $manufactures = json_decode(file_get_contents(__DIR__ . '/data/manufacturers.json'), true);
 
         // Get the manufacturers brand name
         if(isset($manufactures[$this->wmi]))
@@ -146,14 +159,14 @@ class VINDecoder
 
         // Check digit
         $check = substr($this->vin, VINConstants::CHECKSUM_POSITION, 1);
-        $mod = $this->calculatedWeightedProduct % VINConstants::CHECKSUM_FACTOR;
+        $this->checkDigit = $this->calculatedWeightedProduct % VINConstants::CHECKSUM_FACTOR;
 
         // Verify the vin is valid
-        if($mod == VINConstants::CHECKSUM && $check === VINConstants::CHECKSUM_LETTER)
+        if($this->checkDigit == VINConstants::CHECKSUM && $check === VINConstants::CHECKSUM_LETTER)
             return true;
         elseif(isset(VINConstants::WEIGHTEDFACTORS[$check]) && ctype_alpha($check) && VINConstants::WEIGHTEDFACTORS[$check] == $mod)
             return true;
-        elseif($mod == $check)
+        elseif($this->checkDigit == $check)
             return true;
 
         return false;
