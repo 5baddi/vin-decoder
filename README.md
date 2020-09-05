@@ -9,7 +9,7 @@ composer require baddigroup/vin-decoder
 ```
 
 ### Release versions
-
+[0.0.1](https://packagist.org/packages/baddigroup/vin-decoder)
 
 ### Contribution
 All kind of contributions are highly appreciated.
