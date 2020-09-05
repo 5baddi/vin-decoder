@@ -55,8 +55,7 @@ class VINDecoder
             $this->vds = substr($this->vin, 3, 6);
             $this->vis = substr($this->vin, 9, 8);
         }catch(Exception $ex){
-            // TODO: Handle exceptions
-            die($ex->getMessage());
+            throw new Exception("Unknow error");
         }
     }
 
@@ -87,11 +86,48 @@ class VINDecoder
     public function getManufacturer() : ?string
     {
         // Load manufacturers list
-        $manufactures = json_decode(file_get_contents(__DIR__ . '/data/manufacturers.json'), true);
+        $manufactures = json_decode(file_get_contents(__DIR__ . "/data/manufacturers.json"), true);
 
         // Get the manufacturers brand name
         if(isset($manufactures[$this->wmi]))
             return ucwords($manufactures[$this->wmi]);
+
+        return null;
+    }
+
+    /**
+     * Get country by code
+     * 
+     * @return string|null
+     */
+    public function getCountry() : ?string
+    {
+        // Load countries list
+        $countries = json_decode(file_get_contents(__DIR__ . "/data/countries.json"), true);
+
+        // Get country name by code
+        if(isset($countries[$this->getCountryCode()]))
+            return ucwords($countries[$this->getCountryCode()]);
+
+        return null;
+    }
+
+    /**
+     * Get year by code
+     * 
+     * @return string|null
+     */
+    public function getYear() : ?int
+    {
+        // Load years list
+        $years = json_decode(file_get_contents(__DIR__ . "/data/years.json"), true);
+        
+        // Year code
+        $yearCode = substr($this->vin, 9, 1);
+
+        // Get year by code
+        if(isset($years[$yearCode]))
+            return 1980 + ($years[$yearCode] % 30);
 
         return null;
     }
@@ -170,5 +206,15 @@ class VINDecoder
             return true;
 
         return false;
+    }
+
+    /**
+     * Get country code from the VIN number
+     * 
+     * @return string
+     */
+    private function getCountryCode() : string
+    {
+        return substr($this->vin, 0, 2);
     }
 }

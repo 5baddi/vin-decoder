@@ -19,8 +19,11 @@
         </form>
         <hr/>
         <?php if(isset($decoder)): ?>
-        <pre>Manufacturer: <?= $decoder->getManufacturer(); ?></pre>
+        <pre>Make: <?= $decoder->getManufacturer(); ?></pre>
         <pre>Check digit: <?= $decoder->getCheckDigit(); ?></pre>
+        <pre>Country: <?= $decoder->getCountry(); ?></pre>
+        <pre>Model Year: <?= $decoder->getYear(); ?></pre>
+        <pre>Manufactured in: --/pre>
         <?php endif; ?>
     </body>
 </html>
