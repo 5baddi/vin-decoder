@@ -3,7 +3,7 @@
     require('VINConstants.php');
     require('VINDecoder.php');
 
-    use BADDI\VINDecoder;
+    use BADDIGroup\VINDecoder;
 
     if(isset($_POST['vin']))
         $decoder = new VINDecoder($_POST['vin']);

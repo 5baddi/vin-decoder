@@ -1,6 +1,6 @@
 <?php
 
-    namespace BADDI;
+    namespace BADDIGroup;
 
     use Exception;
 

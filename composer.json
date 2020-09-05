@@ -12,5 +12,16 @@
             "homepage": "https://baddi.info",
             "role": "Developer"
         }
-    ]
+    ],
+    "require": {
+        "php": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "BADDIGroup\\": "src/"
+        }
+    }
 }
