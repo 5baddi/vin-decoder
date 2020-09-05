@@ -5,9 +5,5 @@ php:
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction
-before_install: 
-  - composer self-update
-install:
-  - composer install
 script:
-  - phpunit
+  - vendor/bin/phpunit
