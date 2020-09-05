@@ -1,4 +1,6 @@
 # VIN Decoder
+[![Build status](https://api.travis-ci.org/5baddi/vin-decoder.svg)](https://api.travis-ci.org/5baddi/vin-decoder)
+
 PHP package provide VIN number decoding to retrieve vehicle informations 
 
 ### Installation
