@@ -1,6 +1,6 @@
 <?php
 
-namespace BADDIGroup;
+namespace BADDIServices;
 
 /**
  * VINConstants Class
@@ -10,7 +10,7 @@ namespace BADDIGroup;
  * @category Class
  * @author   Mohamed BADDI <project@baddi.info>
  * @license  MIT License
- * @link     https://packagist.org/packages/baddigroup/vin-decoder
+ * @link     https://packagist.org/packages/baddiservices/vin-decoder
  */
 class VINConstants
 {

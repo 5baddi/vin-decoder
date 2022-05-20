@@ -1,9 +1,9 @@
 {
-    "name": "baddigroup/vin-decoder",
+    "name": "baddiservices/vin-decoder",
     "type": "library",
     "description": "Universal vin decoder to retrieve vehicle informations",
     "keywords": ["vin","vin decoder","decoder","vehicle", "dealer", "dealership"],
-    "homepage": "https://baddigroup.com",
+    "homepage": "https://baddi.info",
     "license": "MIT",
     "authors": [
         {
@@ -21,7 +21,7 @@
     },
     "autoload": {
         "psr-4": {
-            "BADDIGroup\\": "src/"
+            "BADDIServices\\": "src/"
         }
     }
 }

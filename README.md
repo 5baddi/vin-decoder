@@ -5,11 +5,11 @@ PHP package provide VIN number decoding to retrieve vehicle informations
 
 ### Installation
 ```
-composer require baddigroup/vin-decoder
+composer require baddiservices/vin-decoder
 ```
 
 ### Release versions
-[0.0.1](https://packagist.org/packages/baddigroup/vin-decoder)
+[0.0.1](https://packagist.org/packages/baddiservices/vin-decoder)
 
 ### Contribution
 All kind of contributions are highly appreciated.
