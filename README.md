@@ -8,8 +8,8 @@ PHP package provide VIN number decoding to retrieve vehicle informations
 composer require baddiservices/vin-decoder
 ```
 
-### Release versions
-[0.0.1](https://packagist.org/packages/baddiservices/vin-decoder)
+### Last release version
+[0.0.2](https://packagist.org/packages/baddiservices/vin-decoder)
 
 ### Contribution
 All kind of contributions are highly appreciated.
