@@ -61,7 +61,7 @@ class VINDecoder
      */
     public function isValid() : bool
     {
-        return $this->validate($this->vin);
+        return @$this->validate($this->vin);
     }
 
     /**
@@ -146,8 +146,7 @@ class VINDecoder
     private function illegalCharacters() : void
     {
         // Replace - and _ and whitespace
-        $this->vin = str_replace('-', '', $this->vin);
-        $this->vin = str_replace(' ', '', $this->vin);
+        $this->vin = str_replace(['-', ' '], '', $this->vin);
         $this->vin = str_replace('_', 0, $this->vin);
 
         // Replace the illegal characters
