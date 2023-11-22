@@ -1,7 +1,7 @@
 {
     "name": "baddiservices/vin-decoder",
     "type": "library",
-    "description": "Universal vin decoder to retrieve vehicle informations",
+    "description": "Universal vin decoder to retrieve vehicle information's",
     "keywords": ["vin","vin decoder","decoder","vehicle", "dealer", "dealership"],
     "homepage": "https://baddi.info",
     "license": "MIT",
@@ -9,12 +9,11 @@
         {
             "name": "Mohamed Baddi",
             "email": "project@baddi.info",
-            "homepage": "https://baddi.info",
-            "role": "Developer"
+            "homepage": "https://baddi.info"
         }
     ],
     "require": {
-        "php": "^7.2"
+        "php": ">=8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8"
