@@ -20,6 +20,7 @@ class VINConstants
     const CHECKSUM = 10;
     const CHECKSUM_FACTOR = 11;
     const CHECKSUM_POSITION = 8;
+
     const TRANSLITERATION = [
         'A' => 1, 'J' => 1,
         'B' => 2, 'K' => 2, 'S' => 2,
@@ -31,7 +32,8 @@ class VINConstants
         'H' => 8, 'Y' => 8, 
         'R' => 9, 'Z' => 9,
     ];
-    const WEIGHTEDFACTORS = [
+
+    const WEIGHTED_FACTORS = [
         1 => 8, 10 => 9,
         2 => 7, 11 => 8,
         3 => 6, 12 => 7,

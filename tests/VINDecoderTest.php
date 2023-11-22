@@ -16,16 +16,13 @@ use PHPUnit\Framework\TestCase;
 class VINDecoderTest extends TestCase
 {
     /**
-     * Test the instance creation
-     * 
-     * @return bool
+     * @throws Exception
      */
     public function testInitInstance()
     {
-        // VIN example
-        $vin = "JTEHT05J542053195";
-
+        $vin = "JTEHT05J542053195"; // VIN example
         $vinDecoder = new VINDecoder($vin);
+
         $this->assertInstanceOf(VINDecoder::class, $vinDecoder);
     }
 }
