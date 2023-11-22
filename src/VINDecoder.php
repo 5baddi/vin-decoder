@@ -18,17 +18,17 @@ class VINDecoder
 {
     public string $vin;
 
-    private $checkDigit;
+    private int $checkDigit;
 
-    private $wmi;
-    private $vds;
-    private $vis;
+    private string $wmi;
+    private string $vds;
+    private string $vis;
 
     private array $transliteration = [];
 
     private array $weightedProduct = [];
     
-    private $calculatedWeightedProduct = 0;
+    private int $calculatedWeightedProduct = 0;
 
     /**
      * @throws Exception
@@ -190,11 +190,12 @@ class VINDecoder
         $check = substr($this->vin, VINConstants::CHECKSUM_POSITION, 1);
         $this->checkDigit = $this->calculatedWeightedProduct % VINConstants::CHECKSUM_FACTOR;
 
-        return ($this->checkDigit === VINConstants::CHECKSUM && $check === VINConstants::CHECKSUM_LETTER)
+        return
+            ($this->checkDigit === VINConstants::CHECKSUM && $check === VINConstants::CHECKSUM_LETTER)
             || (
-                isset(VINConstants::WEIGHTED_FACTORS[$check])
-                && ctype_alpha($check)
-                && VINConstants::WEIGHTED_FACTORS[$check] == $mod
+                ! ctype_alpha($check)
+                && isset(VINConstants::WEIGHTED_FACTORS[$check])
+                && VINConstants::WEIGHTED_FACTORS[$check] === $this->checkDigit
             )
             || ($this->checkDigit == $check);
     }
