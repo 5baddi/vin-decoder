@@ -16,7 +16,7 @@ use Exception;
  */
 class VINDecoder
 {
-    public $vin;
+    public string $vin;
 
     private $checkDigit;
 
@@ -24,44 +24,40 @@ class VINDecoder
     private $vds;
     private $vis;
 
+    private array $transliteration = [];
 
-    private $transliteration = [];
-
-    private $weightedProduct = [];
+    private array $weightedProduct = [];
     
     private $calculatedWeightedProduct = 0;
 
     /**
-     * constructor
-     *
-     * @param string $vin
+     * @throws Exception
      */
     public function __construct(string $vin)
     {
-        try{
-            // Validate the VIN length
-            if(!$this->validate($vin))
-                throw new Exception("Invalid VIN characters");
-
-            // Store the vin into this instance
-            $this->vin = strtoupper($vin);
-
-            // Validate the VIN
-            if(!$this->checksum())
-                throw new Exception("Invalid VIN");
-
-            // Parse the VIN details identifiers
-            $this->wmi = substr($this->vin, 0, 3);
-            $this->vds = substr($this->vin, 3, 6);
-            $this->vis = substr($this->vin, 9, 8);
-        }catch(Exception $ex){
-            throw new Exception("Unknow error");
+        // Validate the VIN length
+        if(! $this->validate($vin)) {
+            throw new Exception("Invalid VIN characters");
         }
+
+        // Store the vin into this instance
+        $this->vin = strtoupper($vin);
+
+        // Validate the VIN
+        if(! $this->checksum()) {
+            throw new Exception("Invalid VIN");
+        }
+
+        // Parse the VIN details identifiers
+        $this->wmi = substr($this->vin, 0, 3);
+        $this->vds = substr($this->vin, 3, 6);
+        $this->vis = substr($this->vin, 9, 8);
     }
 
     /**
      * Check if the VIN is valid
-     * @return boolean
+     *
+     * @throws Exception
      */
     public function isValid() : bool
     {
@@ -70,8 +66,6 @@ class VINDecoder
 
     /**
      * Check digit getter
-     * 
-     * @return int
      */
     public function getCheckDigit() : int
     {
@@ -80,59 +74,39 @@ class VINDecoder
 
     /**
      * Extract the manufacturer brand name
-     *
-     * @return string|null
      */
     public function getManufacturer() : ?string
     {
         // Load manufacturers list
         $manufactures = json_decode(file_get_contents(__DIR__ . "/data/manufacturers.json"), true);
 
-        // Get the manufacturers brand name
-        if(isset($manufactures[$this->wmi]))
-            return ucwords($manufactures[$this->wmi]);
-
-        return null;
+        return ! empty($manufactures[$this->wmi]) ? ucwords($manufactures[$this->wmi]) : null;
     }
 
     /**
      * Get country by code
-     * 
-     * @return string|null
      */
     public function getCountry() : ?string
     {
         // Load countries list
         $countries = json_decode(file_get_contents(__DIR__ . "/data/countries.json"), true);
 
-        // Get country name by code
-        if(isset($countries[$this->getCountryCode()]))
-            return ucwords($countries[$this->getCountryCode()]);
-
-        return null;
+        return ! empty($countries[$this->getCountryCode()]) ? ucwords($countries[$this->getCountryCode()]) : null;
     }
 
     /**
      * Get year by code
-     * 
-     * @return string|null
      */
     public function getYear() : ?int
     {
         // Load years list
         $years = json_decode(file_get_contents(__DIR__ . "/data/years.json"), true);
 
-        // Get year by code
-        if(isset($years[$this->vis[0]]))
-            return $years[$this->vis[0]];
-
-        return null;
+        return $years[$this->vis[0]] ?? null;
     }
 
     /**
-     * Extract serial numver
-     * 
-     * @return string
+     * Extract serial number
      */
     public function getSerialNumber() : string
     {
@@ -141,8 +115,6 @@ class VINDecoder
 
     /**
      * Extract security code
-     * 
-     * @return char
      */
     public function getSecurityCode() : string
     {
@@ -152,24 +124,24 @@ class VINDecoder
     /**
      * Check the vin length and regex
      *
-     * @param string $vin
-     * @return boolean
+     * @throws Exception
      */
     private function validate(string $vin) : bool
     {
         // Verify if the vin corresponds to a vehicle manufactured before 1981
-        if(strlen($vin) == 11)
+        if(strlen($vin) == 11) {
             throw new Exception("Information on vehicles manufactured before 1981 is limited");
-        elseif(strlen($vin) != VINConstants::VIN_LENGTH)
+        }
+
+        if(strlen($vin) != VINConstants::VIN_LENGTH) {
             throw new Exception("VIN number must be 17 characters");
+        }
 
         return (bool)preg_match('/^[a-zA-Z0-9]+$/', $vin);
     }
 
     /**
      * Find and replace illegal characters
-     *
-     * @return void
      */
     private function illegalCharacters() : void
     {
@@ -180,15 +152,16 @@ class VINDecoder
 
         // Replace the illegal characters
         foreach(VINConstants::EXCLUDED_LETTERS as $letter){
-            if(strpos($this->vin, $letter) !== false)
-                $this->vin = str_replace($letter, ($letter === 'I' ? 1 : 0), $this->vin);
+            if(! str_contains($this->vin, $letter)) {
+                continue;
+            }
+
+            $this->vin = str_replace($letter, ($letter === 'I' ? 1 : 0), $this->vin);
         }
     }
 
     /**
      * Check VIN sum and digit by transliteration and weighted product
-     *
-     * @return boolean
      */
     private function checksum() : bool
     {
@@ -198,37 +171,36 @@ class VINDecoder
         // Convert the VIN letters using the transliteration
         foreach(str_split($this->vin) as $letter){
             // Unknown transliteration
-            if(ctype_alpha($letter) && isset(VINConstants::TRANSLITERATION[$letter]))
+            if(ctype_alpha($letter) && isset(VINConstants::TRANSLITERATION[$letter])) {
                 $this->transliteration[] = VINConstants::TRANSLITERATION[$letter];
-            else
-                $this->transliteration[] = $letter;
+
+                continue;
+            }
+
+            $this->transliteration[] = $letter;
         }
 
-        // Calculate the weighted product by wieghted factor
+        // Calculate the weighted product by weighted factor
         foreach($this->transliteration as $key => $trans){
-            $this->weightedProduct[] = VINConstants::WEIGHTEDFACTORS[$key + 1];
-            $this->calculatedWeightedProduct += $trans * VINConstants::WEIGHTEDFACTORS[$key + 1];
+            $this->weightedProduct[] = VINConstants::WEIGHTED_FACTORS[$key + 1];
+            $this->calculatedWeightedProduct += $trans * VINConstants::WEIGHTED_FACTORS[$key + 1];
         }
 
         // Check digit
         $check = substr($this->vin, VINConstants::CHECKSUM_POSITION, 1);
         $this->checkDigit = $this->calculatedWeightedProduct % VINConstants::CHECKSUM_FACTOR;
 
-        // Verify the vin is valid
-        if($this->checkDigit == VINConstants::CHECKSUM && $check === VINConstants::CHECKSUM_LETTER)
-            return true;
-        elseif(isset(VINConstants::WEIGHTEDFACTORS[$check]) && ctype_alpha($check) && VINConstants::WEIGHTEDFACTORS[$check] == $mod)
-            return true;
-        elseif($this->checkDigit == $check)
-            return true;
-
-        return false;
+        return ($this->checkDigit === VINConstants::CHECKSUM && $check === VINConstants::CHECKSUM_LETTER)
+            || (
+                isset(VINConstants::WEIGHTED_FACTORS[$check])
+                && ctype_alpha($check)
+                && VINConstants::WEIGHTED_FACTORS[$check] == $mod
+            )
+            || ($this->checkDigit == $check);
     }
 
     /**
      * Get country code from the VIN number
-     * 
-     * @return string
      */
     private function getCountryCode() : string
     {
